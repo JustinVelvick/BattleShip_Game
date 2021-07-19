@@ -1,0 +1,5 @@
+Daily log while working on the Battleship game project:
+
+Day 1:
+-7/19/21
+-Set up github
