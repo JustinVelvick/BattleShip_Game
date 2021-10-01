@@ -4,7 +4,7 @@ import org.example.Config;
 
 //With all ships, a name can be specified, if not then Config.DEFAULT_SHIP_NAME will be used
 
-public class Ship {
+public class Ship{
     private int length;
     private String name;
 
