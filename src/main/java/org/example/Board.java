@@ -1,23 +1,102 @@
 package org.example;
 
+import org.example.exceptions.InputException;
 import org.example.ship.Ship;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class Board {
-    private int[][] boardState;
+    //   In each cell, contains an ID that points to a unique object stored in the object's hashmap
+    //   Object identification for those being placed on the board begins at 10
+    private int[][] locations;
+    private HashMap<Integer, Placeable> objects;
+    private int num_objects;
+
     private int cols;
     private int rows;
 
     public Board(int cols, int rows){
         this.cols = cols;
         this.rows = rows;
-        this.boardState = new int[cols][rows];
+        this.locations = new int[cols][rows];
     }
 
     public boolean placeShip(Ship ship, Position coordinate, Orientation direction){
-        return false;
+        if(!placeable(ship, coordinate, direction)){
+            return false;
+        }
+
+        return true;
     }
 
-    private boolean placeable(Ship ship, Position coordinate, Orientation direction){
-        return false;
+    private boolean placeable(Ship ship, Position origin, Orientation direction){
+
+        Position p = origin;
+
+        int xChange = 0;
+        int yChange = 0;
+        boolean valid = true;
+
+        switch(direction){
+            case North:
+                yChange = 1;
+                break;
+            case South:
+                yChange = -1;
+                break;
+            case East:
+                xChange = 1;
+                break;
+            case West:
+                xChange = -1;
+                break;
+            default:
+                throw new InputException("Invalid Ship orientation input, expected one of: North, South, East, West");
+        }
+
+        for(int i = 0; i < ship.getLength(); i++){
+            p.setX_value(origin.getX_value() + i*xChange);
+            p.setY_value(origin.getY_value() + i*yChange);
+            if(!inBounds(p)){
+                valid = false;
+                break;
+            }
+        }
+        return valid;
+    }
+
+    private boolean inBounds(Position coordinate){
+        boolean valid = true;
+        int x = coordinate.getX_value();
+        int y = coordinate.getY_value();
+        if(x < 0 || x > this.cols){
+            valid = false;
+        }
+        if(y < 0 || y > this.rows){
+            valid = false;
+        }
+        return valid;
+    }
+
+    //   getPositions will return a single Position object if object takes up a single tile,
+    //   Otherwise, it will return a list of coordinates with the origin of the object being the first
+    //TODO - figure out where the origin will be in return list
+    public List<Position> getPosition(Placeable object){
+        List<Position> positions = new ArrayList<>();
+        return positions;
+    }
+
+    public int getNum_objects() {
+        return num_objects;
+    }
+
+    public Placeable getObject(int ID){
+        return this.objects.get(ID);
+    }
+
+    public int getID(Position coordinate){
+        return this.locations[coordinate.getX_value()][coordinate.getY_value()];
     }
 }

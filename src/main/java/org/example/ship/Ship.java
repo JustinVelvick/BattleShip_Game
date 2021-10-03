@@ -1,10 +1,11 @@
 package org.example.ship;
 
 import org.example.Config;
+import org.example.Placeable;
 
 //With all ships, a name can be specified, if not then Config.DEFAULT_SHIP_NAME will be used
 
-public class Ship{
+public class Ship implements Placeable {
     private int length;
     private String name;
 

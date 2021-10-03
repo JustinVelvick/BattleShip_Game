@@ -4,6 +4,9 @@ import org.example.ship.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.example.Config.BOARD_COLUMNS;
 import static org.example.Config.BOARD_ROWS;
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,7 +53,7 @@ class BoardTest {
         Orientation direction_e = Orientation.East;
         assertFalse(board.placeShip(battleship1, bad_coordinates, direction_e));
         //place a ship with GOOD origin coordinates, but a direction that causes partial off board placement
-        //Here we are placing of the very Eastern edge of the board, but w/ eastern placement, ship will go off
+        //Here we are placing of the very Eastern edge of the board, but w/ eastern facing placement, ship will go off
         Position good_coordinates = new Position(BOARD_COLUMNS-1,5);
         assertFalse(board.placeShip(battleship1, good_coordinates, direction_e));
     }
@@ -66,5 +69,45 @@ class BoardTest {
         good_coordinates = new Position(4,BOARD_ROWS-1);
         Orientation direction_s = Orientation.South;
         assertTrue(board.placeShip(destroyer1, good_coordinates, direction_s));
+    }
+
+    @Test
+    void getObjectLocation(){
+        //With a battleship, the expected coordinates are: (4,4), (4,5), (4,6), and (4,7)
+        Position origin = new Position(4,4);
+        Orientation direction = Orientation.North;
+        board.placeShip(battleship1, origin, direction);
+
+        List<Position> result = board.getPosition(battleship1);
+        List<Position> expected = new ArrayList<>();
+        expected.add(new Position(4,4));
+        expected.add(new Position(4,5));
+        expected.add(new Position(4,6));
+        expected.add(new Position(4,7));
+
+        assertEquals(result, expected);
+    }
+
+    //   Tests that when an object is placed, the board correctly assigns it an iterative ID and places
+    //   that ID in the correct coordinates in the "locations" array.
+    @Test
+    void object_id_assignment(){
+        Position origin = new Position(1,1);
+        Orientation direction = Orientation.North;
+        board.placeShip(battleship1, origin, direction);
+
+        //Object identification for those being placed on the board begins at 10
+        int expectedID = 10;
+        Position coord = origin;
+        int obj_ID = 0;
+        //All coordinates of this battleship should contain the same object ID
+        for(int i = 0; i < battleship1.getLength(); i++){
+            coord.setY_value(origin.getY_value()+i);
+            obj_ID = board.getID(coord);
+            assertEquals(expectedID, obj_ID);
+        }
+        //Make sure the objects list in board has this battleship object stored for expectedID
+        Placeable stored_object = board.getObject(obj_ID);
+        assertEquals(stored_object, battleship1);
     }
 }
