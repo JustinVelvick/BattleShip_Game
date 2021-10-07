@@ -4,15 +4,13 @@ import org.example.exceptions.InputException;
 import org.example.ship.Ship;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Board {
     //   In each cell, contains an ID that points to a unique object stored in the object's hashmap
     //   Object identification for those being placed on the board begins at 10
-    private int[][] locations;
-    private HashMap<Integer, Placeable> objects;
-    private int num_objects;
+    private Placeable[][] locations;
+    private Ship[] fleet;
 
     private int cols;
     private int rows;
@@ -20,7 +18,7 @@ public class Board {
     public Board(int cols, int rows){
         this.cols = cols;
         this.rows = rows;
-        this.locations = new int[cols][rows];
+        this.locations = new Placeable[cols][rows];
     }
 
     public boolean placeShip(Ship ship, Position coordinate, Orientation direction){
@@ -88,15 +86,11 @@ public class Board {
         return positions;
     }
 
-    public int getNum_objects() {
-        return num_objects;
+    public Placeable getObject(Position coord){
+        return this.locations[coord.getX_value()][coord.getY_value()];
     }
 
-    public Placeable getObject(int ID){
-        return this.objects.get(ID);
-    }
-
-    public int getID(Position coordinate){
-        return this.locations[coordinate.getX_value()][coordinate.getY_value()];
+    public Ship[] getFleet(){
+        return this.fleet;
     }
 }

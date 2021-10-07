@@ -87,27 +87,4 @@ class BoardTest {
 
         assertEquals(result, expected);
     }
-
-    //   Tests that when an object is placed, the board correctly assigns it an iterative ID and places
-    //   that ID in the correct coordinates in the "locations" array.
-    @Test
-    void object_id_assignment(){
-        Position origin = new Position(1,1);
-        Orientation direction = Orientation.North;
-        board.placeShip(battleship1, origin, direction);
-
-        //Object identification for those being placed on the board begins at 10
-        int expectedID = 10;
-        Position coord = origin;
-        int obj_ID = 0;
-        //All coordinates of this battleship should contain the same object ID
-        for(int i = 0; i < battleship1.getLength(); i++){
-            coord.setY_value(origin.getY_value()+i);
-            obj_ID = board.getID(coord);
-            assertEquals(expectedID, obj_ID);
-        }
-        //Make sure the objects list in board has this battleship object stored for expectedID
-        Placeable stored_object = board.getObject(obj_ID);
-        assertEquals(stored_object, battleship1);
-    }
 }

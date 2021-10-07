@@ -8,6 +8,19 @@ public class SurfaceShipyard extends ShipYard {
     //default constructor
     @Override
     public Ship createShip(ShipType type) {
+        Ship newShip = buildShip(type);
+        return newShip;
+    }
+
+    //constructor with specific name
+    @Override
+    public Ship createShip(ShipType type, String name) {
+        Ship newShip = buildShip(type);
+        newShip.setName(name);
+        return newShip;
+    }
+
+    private Ship buildShip(ShipType type){
         Ship newShip = new Minesweeper();
         switch(type){
             case Minesweeper:
@@ -17,22 +30,6 @@ public class SurfaceShipyard extends ShipYard {
 
             case Battleship:
                 newShip = new Battleship();
-        }
-        return newShip;
-    }
-
-    //constructor with specific name
-    @Override
-    public Ship createShip(ShipType type, String name) {
-        Ship newShip = new Minesweeper();
-        switch(type){
-            case Minesweeper:
-                newShip = new Minesweeper(name);
-            case Destroyer:
-                newShip = new Destroyer(name);
-
-            case Battleship:
-                newShip = new Battleship(name);
         }
         return newShip;
     }
