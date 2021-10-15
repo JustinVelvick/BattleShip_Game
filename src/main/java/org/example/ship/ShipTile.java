@@ -1,8 +1,8 @@
 package org.example.ship;
 
-import org.example.Placeable;
+import org.example.nature.Tile;
 
-public class ShipTile implements Placeable {
+public class ShipTile extends Tile {
     Ship parent;
     boolean shot;
     public ShipTile(Ship parentShip){

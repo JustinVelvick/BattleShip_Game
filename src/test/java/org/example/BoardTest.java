@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.exceptions.ShipPlacementException;
 import org.example.ship.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,25 +38,43 @@ class BoardTest {
         Position good_coordinates = new Position(3,6);
         Orientation direction_s = Orientation.South;
         assertTrue(board.placeShip(battleship1, good_coordinates, direction_s));
-        //try placing a second ship with the SAME coordinates on the board
-        assertFalse(board.placeShip(destroyer1, good_coordinates, direction_s));
+
+        //try placing a second ship with the SAME coordinates on the board, should throw exception
+        Exception exception = assertThrows(ShipPlacementException.class, () -> board.placeShip(destroyer1, good_coordinates, direction_s));
+        String expected = "Ship placement collides with an existing ship!";
+        String actual = exception.getMessage();
+        assertTrue(actual.contains(expected));
+
+
         //    now try placing a ship with different coordinates, but ones that would cause overlapping
         //    with above already placed battleship
         Position overlapping_cords = new Position(2,5);
         Orientation direction_e = Orientation.East;
-        assertFalse(board.placeShip(minesweeper1, overlapping_cords, direction_e));
+
+        exception = assertThrows(ShipPlacementException.class, () -> board.placeShip(minesweeper1, overlapping_cords, direction_e));
+        expected = "Ship placement collides with an existing ship!";
+        actual = exception.getMessage();
+        assertTrue(actual.contains(expected));
     }
 
     @Test
     void placeShip_badInput(){
-        //place a ship with BAD origin coordinates onto the board
+        //place a ship with BAD origin coordinates onto the board, should throw ShipPlacementException
         Position bad_coordinates = new Position(BOARD_COLUMNS+1,BOARD_ROWS+3);
         Orientation direction_e = Orientation.East;
-        assertFalse(board.placeShip(battleship1, bad_coordinates, direction_e));
+        Exception exception = assertThrows(ShipPlacementException.class, () -> board.placeShip(battleship1, bad_coordinates, direction_e));
+        String expected = "Ship placement out of bounds!";
+        String actual = exception.getMessage();
+        assertTrue(actual.contains(expected));
+
+
         //place a ship with GOOD origin coordinates, but a direction that causes partial off board placement
         //Here we are placing of the very Eastern edge of the board, but w/ eastern facing placement, ship will go off
         Position good_coordinates = new Position(BOARD_COLUMNS-1,5);
-        assertFalse(board.placeShip(battleship1, good_coordinates, direction_e));
+        exception = assertThrows(ShipPlacementException.class, () -> board.placeShip(battleship1, good_coordinates, direction_e));
+        expected = "Ship placement out of bounds!";
+        actual = exception.getMessage();
+        assertTrue(actual.contains(expected));
     }
 
     @Test
@@ -72,13 +91,13 @@ class BoardTest {
     }
 
     @Test
-    void getObjectLocation(){
+    void getPosition(){
         //With a battleship, the expected coordinates are: (4,4), (4,5), (4,6), and (4,7)
         Position origin = new Position(4,4);
         Orientation direction = Orientation.North;
         board.placeShip(battleship1, origin, direction);
 
-        List<Position> result = board.getPosition(battleship1);
+        Position result = board.getPosition(battleship1);
         List<Position> expected = new ArrayList<>();
         expected.add(new Position(4,4));
         expected.add(new Position(4,5));
